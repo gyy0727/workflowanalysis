@@ -1,4 +1,14 @@
 /*
+ * @Author       : gyy0727 3155833132@qq.com
+ * @Date         : 2024-09-28 16:33:12
+ * @LastEditors  : gyy0727 3155833132@qq.com
+ * @LastEditTime : 2024-09-28 16:51:20
+ * @FilePath     : /myworkflow/root/desktop/opensource/workflowanalysis/src/kernel/mpoller.h
+ * /myworkflow/root/desktop/opensource/workflowanalysis/src/kernel/mpoller.h
+ * @Description  :
+ * Copyright (c) 2024 by gyy0727 email: 3155833132@qq.com, All Rights Reserved.
+ */
+/*
   Copyright (c) 2019 Sogou, Inc.
 
   Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,14 +29,13 @@
 #ifndef _MPOLLER_H_
 #define _MPOLLER_H_
 
-#include <stddef.h>
 #include "poller.h"
+#include <stddef.h>
 
 typedef struct __mpoller mpoller_t;
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
 mpoller_t *mpoller_create(const struct poller_params *params, size_t nthreads);
@@ -38,52 +47,47 @@ void mpoller_destroy(mpoller_t *mpoller);
 }
 #endif
 
-struct __mpoller
-{
-	void **nodes_buf;
-	unsigned int nthreads;
-	poller_t *poller[1];
+struct __mpoller {
+  void **nodes_buf;
+  unsigned int nthreads;
+  poller_t *poller[1];
 };
 
 static inline int mpoller_add(const struct poller_data *data, int timeout,
-							  mpoller_t *mpoller)
-{
-	int index = (unsigned int)data->fd % mpoller->nthreads;
-	return poller_add(data, timeout, mpoller->poller[index]);
+                              mpoller_t *mpoller) {
+  int index = (unsigned int)data->fd % mpoller->nthreads;
+  return poller_add(data, timeout, mpoller->poller[index]);
 }
 
-static inline int mpoller_del(int fd, mpoller_t *mpoller)
-{
-	int index = (unsigned int)fd % mpoller->nthreads;
-	return poller_del(fd, mpoller->poller[index]);
+static inline int mpoller_del(int fd, mpoller_t *mpoller) {
+  int index = (unsigned int)fd % mpoller->nthreads;
+  return poller_del(fd, mpoller->poller[index]);
 }
 
 static inline int mpoller_mod(const struct poller_data *data, int timeout,
-							  mpoller_t *mpoller)
-{
-	int index = (unsigned int)data->fd % mpoller->nthreads;
-	return poller_mod(data, timeout, mpoller->poller[index]);
+                              mpoller_t *mpoller) {
+  int index = (unsigned int)data->fd % mpoller->nthreads;
+  return poller_mod(data, timeout, mpoller->poller[index]);
 }
 
-static inline int mpoller_set_timeout(int fd, int timeout, mpoller_t *mpoller)
-{
-	int index = (unsigned int)fd % mpoller->nthreads;
-	return poller_set_timeout(fd, timeout, mpoller->poller[index]);
+//*其实就是先把fd对应的node从超时红黑树和list里面删除,然后重新加入超时红黑树
+//*下次触发的时候还会执行设置好的函数
+static inline int mpoller_set_timeout(int fd, int timeout, mpoller_t *mpoller) {
+  int index = (unsigned int)fd % mpoller->nthreads;
+  return poller_set_timeout(fd, timeout, mpoller->poller[index]);
 }
 
 static inline int mpoller_add_timer(const struct timespec *value, void *context,
-									void **timer, int *index,
-									mpoller_t *mpoller)
-{
-	static unsigned int n = 0;
-	*index = n++ % mpoller->nthreads;
-	return poller_add_timer(value, context, timer, mpoller->poller[*index]);
+                                    void **timer, int *index,
+                                    mpoller_t *mpoller) {
+  static unsigned int n = 0;
+  *index = n++ % mpoller->nthreads;
+  return poller_add_timer(value, context, timer, mpoller->poller[*index]);
 }
 
-static inline int mpoller_del_timer(void *timer, int index, mpoller_t *mpoller)
-{
-	return poller_del_timer(timer, mpoller->poller[index]);
+static inline int mpoller_del_timer(void *timer, int index,
+                                    mpoller_t *mpoller) {
+  return poller_del_timer(timer, mpoller->poller[index]);
 }
 
 #endif
-
