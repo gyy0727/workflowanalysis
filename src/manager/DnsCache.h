@@ -24,8 +24,8 @@
 #include <string>
 #include <mutex>
 #include <utility>
-#include "LRUCache.h"
-#include "DnsUtil.h"
+#include "../include/workflow/LRUCache.h"
+#include "../include/workflow/DnsUtil.h"
 
 #define GET_TYPE_TTL		0
 #define GET_TYPE_CONFIDENT	1

@@ -1,4 +1,14 @@
 /*
+ * @Author       : gyy0727 3155833132@qq.com
+ * @Date         : 2024-09-28 16:33:12
+ * @LastEditors  : gyy0727 3155833132@qq.com
+ * @LastEditTime : 2024-09-30 09:46:18
+ * @FilePath     :
+ * /myworkflow/root/desktop/opensource/workflowanalysis/src/manager/RouteManager.h
+ * @Description  :
+ * Copyright (c) 2024 by gyy0727 email: 3155833132@qq.com, All Rights Reserved.
+ */
+/*
   Copyright (c) 2019 Sogou, Inc.
 
   Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,68 +29,60 @@
 #ifndef _ROUTEMANAGER_H_
 #define _ROUTEMANAGER_H_
 
-#include <sys/types.h>
-#include <sys/socket.h>
+#include "../include/workflow/rbtree.h"
+#include "../include/workflow/CommScheduler.h"
+#include "../include/workflow/EndpointParams.h"
+#include "../include/workflow/WFConnection.h"
+#include <mutex>
 #include <netdb.h>
 #include <string>
-#include <mutex>
-#include "rbtree.h"
-#include "WFConnection.h"
-#include "EndpointParams.h"
-#include "CommScheduler.h"
+#include <sys/socket.h>
+#include <sys/types.h>
 
-class RouteManager
-{
+class RouteManager {
 public:
-	class RouteResult
-	{
-	public:
-		void *cookie;
-		CommSchedObject *request_object;
+  class RouteResult {
+  public:
+    void *cookie;
+    CommSchedObject *request_object;
 
-	public:
-		RouteResult(): cookie(NULL), request_object(NULL) { }
-		void clear() { cookie = NULL; request_object = NULL; }
-	};
+  public:
+    RouteResult() : cookie(NULL), request_object(NULL) {}
+    void clear() {
+      cookie = NULL;
+      request_object = NULL;
+    }
+  };
 
-	class RouteTarget : public CommSchedTarget
-	{
-	public:
-		int state;
+  class RouteTarget : public CommSchedTarget {
+  public:
+    int state;
 
-	private:
-		virtual WFConnection *new_connection(int connect_fd)
-		{
-			return new WFConnection;
-		}
+  private:
+    virtual WFConnection *new_connection(int connect_fd) {
+      return new WFConnection;
+    }
 
-	public:
-		RouteTarget() : state(0) { }
-	};
+  public:
+    RouteTarget() : state(0) {}
+  };
 
 public:
-	int get(enum TransportType type,
-			const struct addrinfo *addrinfo,
-			const std::string& other_info,
-			const struct EndpointParams *ep_params,
-			const std::string& hostname,
-			RouteResult& result);
+  int get(enum TransportType type, const struct addrinfo *addrinfo,
+          const std::string &other_info, const struct EndpointParams *ep_params,
+          const std::string &hostname, RouteResult &result);
 
-	RouteManager()
-	{
-		cache_.rb_node = NULL;
-	}
+  RouteManager() { cache_.rb_node = NULL; }
 
-	~RouteManager();
+  ~RouteManager();
 
 private:
-	std::mutex mutex_;
-	struct rb_root cache_;
+  std::mutex mutex_;
+  struct rb_root cache_;
 
 public:
-	static void notify_unavailable(void *cookie, CommTarget *target);
-	static void notify_available(void *cookie, CommTarget *target);
+  static void notify_unavailable(void *cookie, CommTarget *target);
+  static void notify_available(void *cookie, CommTarget *target);
 };
 
 #endif
-

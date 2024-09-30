@@ -28,13 +28,13 @@
 #include <vector>
 #include <string>
 #include <algorithm>
-#include "list.h"
-#include "rbtree.h"
-#include "WFGlobal.h"
-#include "CommScheduler.h"
-#include "EndpointParams.h"
-#include "RouteManager.h"
-#include "StringUtil.h"
+#include "../include/workflow/list.h"
+#include "../include/workflow/rbtree.h"
+#include "../include/workflow/WFGlobal.h"
+#include "../include/workflow/CommScheduler.h"
+#include "../include/workflow/EndpointParams.h"
+#include "../include/workflow/RouteManager.h"
+#include "../include/workflow/StringUtil.h"
 
 #define GET_CURRENT_SECOND	std::chrono::duration_cast<std::chrono::seconds>(std::chrono::steady_clock::now().time_since_epoch()).count()
 #define MTTR_SECOND			30

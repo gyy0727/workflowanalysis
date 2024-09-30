@@ -21,7 +21,7 @@
 
 #include <string>
 #include <atomic>
-#include "WFTaskFactory.h"
+#include "../include/workflow/WFTaskFactory.h"
 #include "DnsMessage.h"
 
 class WFDnsClient

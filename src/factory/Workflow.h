@@ -159,8 +159,8 @@ protected:
 	friend class Workflow;
 };
 
-static inline SeriesWork *series_of(const SubTask *task)
-{
+static inline SeriesWork *series_of(const SubTask *task) {
+  //*将get_pointer的指针强转成series_work
 	return (SeriesWork *)task->get_pointer();
 }
 

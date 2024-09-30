@@ -25,14 +25,14 @@
 #endif
 
 #include <string>
-#include "CommScheduler.h"
+#include "../include/workflow/CommScheduler.h"
 #include "DnsCache.h"
 #include "RouteManager.h"
-#include "Executor.h"
+#include "../include/workflow/Executor.h"
 #include "EndpointParams.h"
-#include "WFResourcePool.h"
-#include "WFNameService.h"
-#include "WFDnsResolver.h"
+#include "../include/workflow/WFResourcePool.h"
+#include "../include/workflow/WFNameService.h"
+#include "../include/workflow/WFDnsResolver.h"
 
 /**
  * @file    WFGlobal.h
